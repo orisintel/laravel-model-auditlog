@@ -18,6 +18,7 @@ class AddPostsTable extends Migration
             $table->string('title');
             $table->timestamp('posted_at')->index();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

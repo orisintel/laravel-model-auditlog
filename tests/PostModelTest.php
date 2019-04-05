@@ -72,4 +72,26 @@ class PostModelTest extends TestCase
         $this->assertEquals('My New Title', $title->field_value_new);
 
     }
+
+    /** @test */
+    public function deleting_a_post_triggers_a_revision()
+    {
+        /** @var Post $post */
+        $post = Post::create([
+            'title' => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $this->assertEquals(2, $post->auditLogs()->count());
+
+        $post->delete();
+
+        $this->assertEquals(3, $post->auditLogs()->count());
+
+        $last = $post->auditLogs()->where('event_type', EventType::DELETED)->first();
+        $this->assertEquals('deleted_at', $last->field_name);
+        $this->assertNull($last->field_value_old);
+        $this->assertNotEmpty($last->field_value_new);
+    }
+
 }
