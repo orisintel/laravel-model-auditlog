@@ -21,9 +21,17 @@ abstract class BaseModel extends Model
      */
     public static function recordChanges(int $event_type, $model) : void
     {
-        $changes = $event_type == EventType::CREATED
-            ? $model->toArray()
-            : $model->getDirty();
+        switch($event_type) {
+            default:
+                $changes = $model->getDirty();
+                break;
+            case EventType::CREATED:
+                $changes = $model->toArray();
+                break;
+            case EventType::RESTORED:
+                $changes = $model->getChanges();
+                break;
+        }
 
         collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
