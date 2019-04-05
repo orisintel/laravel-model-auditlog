@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OrisIntel\AuditLog\Tests;
-
 
 class ModelTest extends TestCase
 {
