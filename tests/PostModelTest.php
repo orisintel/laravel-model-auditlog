@@ -97,7 +97,7 @@ class PostModelTest extends TestCase
     {
         /** @var Post $post */
         $post = Post::create([
-            'title' => 'Test',
+            'title'     => 'Test',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 

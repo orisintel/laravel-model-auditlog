@@ -21,7 +21,7 @@ abstract class BaseModel extends Model
      */
     public static function recordChanges(int $event_type, $model) : void
     {
-        switch($event_type) {
+        switch ($event_type) {
             default:
                 $changes = $model->getDirty();
                 break;
