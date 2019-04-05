@@ -1,6 +1,5 @@
 <?php
 
-
 namespace OrisIntel\AuditLog\Tests;
 
 use Illuminate\Support\Facades\Schema;

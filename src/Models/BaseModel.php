@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OrisIntel\AuditLog\Models;
-
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +16,7 @@ abstract class BaseModel extends Model
     /**
      * Record the change in the appropriate audit log table.
      *
-     * @param int $event_type
+     * @param int   $event_type
      * @param Model $model
      */
     public static function recordChanges(int $event_type, $model) : void
@@ -29,7 +27,7 @@ abstract class BaseModel extends Model
 
         collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
-            ->each(function($change, $key) use($event_type, $model) {
+            ->each(function ($change, $key) use ($event_type, $model) {
                 $log = new static();
                 $log->event_type = $event_type;
                 $log->subject_id = $model->getKey();
@@ -65,6 +63,7 @@ abstract class BaseModel extends Model
     public function getSubjectModelClassInstance()
     {
         $class = $this->getSubjectModelClassname();
+
         return new $class();
     }
 }
