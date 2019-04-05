@@ -13,7 +13,7 @@ class AuditLogServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/model-audit-log.php' => config_path('model-audit-log.php'),
+                __DIR__.'/../config/model-auditlog.php' => config_path('model-auditlog.php'),
             ], 'config');
         }
     }
@@ -23,6 +23,6 @@ class AuditLogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/model-audit-log.php', 'model-audit-log');
+        $this->mergeConfigFrom(__DIR__.'/../config/model-auditlog.php', 'model-auditlog');
     }
 }
