@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OrisIntel\AuditLog\Observers;
-
 
 use Illuminate\Database\Eloquent\Model;
 use OrisIntel\AuditLog\EventType;
@@ -50,6 +48,7 @@ class AuditLogObserver
      * model you provide.
      *
      * @param $model
+     *
      * @return mixed
      */
     protected function getAuditLogModel($model)

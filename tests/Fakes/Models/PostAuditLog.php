@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OrisIntel\AuditLog\Tests\Fakes\Models;
-
 
 use OrisIntel\AuditLog\Models\BaseModel;
 

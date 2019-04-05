@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OrisIntel\AuditLog\Traits;
-
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use OrisIntel\AuditLog\Observers\AuditLogObserver;
@@ -33,6 +31,7 @@ trait AuditLoggable
     public function getAuditLogModelInstance()
     {
         $class = $this->getAuditLogModelName();
+
         return new $class();
     }
 
