@@ -49,4 +49,27 @@ class PostModelTest extends TestCase
         $this->assertNull($posted->field_value_old);
         $this->assertEquals('2019-04-05 12:00:00', $posted->field_value_new);
     }
+
+    /** @test */
+    public function updating_a_post_triggers_a_revision()
+    {
+        /** @var Post $post */
+        $post = Post::create([
+            'title' => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $this->assertEquals(2, $post->auditLogs()->count());
+
+        // Modify the post
+        $post->update(['title' => 'My New Title']);
+        $this->assertEquals(3, $post->auditLogs()->count());
+
+
+        $title = $post->auditLogs()->where('event_type', EventType::UPDATED)->first();
+        $this->assertEquals('title', $title->field_name);
+        $this->assertEquals('Test', $title->field_value_old);
+        $this->assertEquals('My New Title', $title->field_value_new);
+
+    }
 }
