@@ -30,7 +30,7 @@ After adding the proper fields to your table, add the trait to your model.
 // User model
 class User extends Model
 {
-    use \OrisIntel\AuditLog\AuditLog;
+    use \OrisIntel\AuditLog\Traits\AuditLoggable;
 
 ```
 
