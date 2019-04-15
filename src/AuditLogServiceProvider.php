@@ -3,6 +3,7 @@
 namespace OrisIntel\AuditLog;
 
 use Illuminate\Support\ServiceProvider;
+use OrisIntel\AuditLog\Console\Commands\MakeModelAuditLogTable;
 
 class AuditLogServiceProvider extends ServiceProvider
 {
@@ -24,5 +25,7 @@ class AuditLogServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/model-auditlog.php', 'model-auditlog');
+
+        $this->commands(MakeModelAuditLogTable::class);
     }
 }

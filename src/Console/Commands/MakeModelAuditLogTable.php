@@ -11,7 +11,9 @@ class MakeModelAuditLogTable extends Command
      *
      * @var string
      */
-    protected $signature = 'make:model-auditlog';
+    protected $signature = 'make:model-auditlog 
+                                {existing-model-class : Define which model this auditlog should extend.}
+                            ';
 
     /**
      * The console command description.
@@ -27,6 +29,16 @@ class MakeModelAuditLogTable extends Command
      */
     public function handle()
     {
-        //
+        $class = $this->argument('existing-model-class');
+
+        if (! class_exists($class)) {
+            $this->error("Class {$class} could not be found");
+            return;
+        }
+
+        $model = new $class;
+        $table = $model->getTable();
+
+
     }
 }
