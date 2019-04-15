@@ -33,12 +33,11 @@ class MakeModelAuditLogTable extends Command
 
         if (! class_exists($class)) {
             $this->error("Class {$class} could not be found");
+
             return;
         }
 
-        $model = new $class;
+        $model = new $class();
         $table = $model->getTable();
-
-
     }
 }
