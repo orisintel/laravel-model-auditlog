@@ -1,0 +1,13 @@
+<?php
+
+namespace {NAMESPACE};
+
+use InvalidArgumentException;
+use OrisIntel\AuditLog\Models\BaseModel;
+
+class {CLASS_NAME} extends BaseModel
+{
+    protected $table = '{TABLE_NAME}';
+
+    protected $guarded = [];
+}
