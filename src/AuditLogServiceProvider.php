@@ -28,7 +28,7 @@ class AuditLogServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                MakeModelAuditLogTable::class
+                MakeModelAuditLogTable::class,
             ]);
         }
     }
