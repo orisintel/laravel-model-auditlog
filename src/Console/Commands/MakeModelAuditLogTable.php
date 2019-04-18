@@ -75,12 +75,12 @@ class MakeModelAuditLogTable extends Command
         return class_basename($subject_model) . $config['model_suffix'];
     }
 
-
     /**
      * @param Model $subject_model
      *
-     * @return string
      * @throws \ReflectionException
+     *
+     * @return string
      */
     public function getModelNamespace($subject_model) : string
     {
@@ -100,7 +100,7 @@ class MakeModelAuditLogTable extends Command
         $stub = $this->getStubWithReplacements($config['model_stub'], [
             '{TABLE_NAME}' => $this->generateAuditTableName($subject_model, $config),
             '{CLASS_NAME}' => $modelname,
-            '{NAMESPACE}' => $this->getModelNamespace($subject_model),
+            '{NAMESPACE}'  => $this->getModelNamespace($subject_model),
         ]);
 
         $filename = $config['model_path'] . DIRECTORY_SEPARATOR . $modelname . '.php';
@@ -120,11 +120,11 @@ class MakeModelAuditLogTable extends Command
         $fileslug = "create_{$tablename}_table";
 
         $stub = $this->getStubWithReplacements($config['migration_stub'], [
-            '{TABLE_NAME}' => $tablename,
-            '{CLASS_NAME}' => $this->generateMigrationClassname($fileslug),
-            '{PROCESS_IDS_SETUP}' => $this->generateMigrationProcessStamps($config),
+            '{TABLE_NAME}'          => $tablename,
+            '{CLASS_NAME}'          => $this->generateMigrationClassname($fileslug),
+            '{PROCESS_IDS_SETUP}'   => $this->generateMigrationProcessStamps($config),
             '{FOREIGN_KEY_SUBJECT}' => $this->generateMigrationSubjectForeignKeys($subject_model, $config),
-            '{FOREIGN_KEY_USER}' => $this->generateMigrationUserForeignKeys($config),
+            '{FOREIGN_KEY_USER}'    => $this->generateMigrationUserForeignKeys($config),
         ]);
 
         $filename = $config['migration_path'] . DIRECTORY_SEPARATOR . $this->generateMigrationFilename($fileslug);
@@ -156,7 +156,7 @@ class MakeModelAuditLogTable extends Command
 
     /**
      * @param string $file
-     * @param array $replacements
+     * @param array  $replacements
      *
      * @return string
      */
@@ -168,7 +168,6 @@ class MakeModelAuditLogTable extends Command
             file_get_contents(realpath($file))
         );
     }
-
 
     /**
      * @param Model $subject_model
@@ -195,7 +194,7 @@ class MakeModelAuditLogTable extends Command
     public function generateMigrationUserForeignKeys(array $config) : string
     {
         $user_model = new $config['user_model']();
-        if (Arr::get($config, 'enable_user_foreign_keys') === true && !empty($user_model)) {
+        if (Arr::get($config, 'enable_user_foreign_keys') === true && ! empty($user_model)) {
             $user_table = $user_model->getTable();
             $user_primary = $user_model->getKeyName();
 
