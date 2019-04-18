@@ -26,6 +26,10 @@ class AuditLogServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/model-auditlog.php', 'model-auditlog');
 
-        $this->commands(MakeModelAuditLogTable::class);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MakeModelAuditLogTable::class
+            ]);
+        }
     }
 }
