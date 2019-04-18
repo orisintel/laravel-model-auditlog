@@ -34,6 +34,14 @@ class User extends Model
 
 ```
 
+To generate an auditlog model / migration for your models, use the following command:
+
+```sh
+php artisan make:model-auditlog "\App\User"
+```
+
+Replace `\App\User` with your own model name. Model / table options can be tweaked in the config file.
+
 ### Testing
 
 ``` bash
