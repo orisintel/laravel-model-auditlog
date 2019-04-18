@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class {MIGRATION_CLASS_NAME} extends Migration
+class {CLASS_NAME} extends Migration
 {
     /**
      * Run the migrations.
@@ -23,7 +23,9 @@ class {MIGRATION_CLASS_NAME} extends Migration
             $table->timestamps();
             {PROCESS_IDS_SETUP}
 
-            {FOREIGN_KEY_SETUP}
+            {FOREIGN_KEY_SUBJECT}
+
+            {FOREIGN_KEY_USER}
         });
     }
 

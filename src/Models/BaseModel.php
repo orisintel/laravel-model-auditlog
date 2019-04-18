@@ -60,7 +60,7 @@ abstract class BaseModel extends Model
      */
     public function getSubjectModelClassname() : string
     {
-        return str_replace(config('model-auditlog.default_model_suffix'), '', get_class($this));
+        return str_replace(config('model-auditlog.model_suffix'), '', get_class($this));
     }
 
     /**

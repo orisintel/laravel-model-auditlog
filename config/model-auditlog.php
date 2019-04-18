@@ -9,14 +9,22 @@ return [
      *
      * Feel free to override this on each model by overriding the getAuditLogTableName() method.
      */
-    'default_table_suffix' => '_auditlog',
+    'table_suffix' => '_auditlog',
 
     /*
      * This is the default suffix applied to models' class names.
      *
      * Example: The User model would have an audit log model of UserAuditLog.
      */
-    'default_model_suffix' => 'AuditLog',
+    'model_suffix' => 'AuditLog',
+
+    'model_path' => app_path(),
+
+    'model_stub' => __DIR__ . '/../stubs/model.stub',
+
+    'migration_path' => database_path('migrations'),
+
+    'migration_stub' => __DIR__ . '/../stubs/migration.stub',
 
     /*
      * Enable foreign keys between the audit tables and the subject model's primary key.
@@ -27,6 +35,8 @@ return [
      * Enable foreign keys between the audit tables' user fields and the users model.
      */
     'enable_user_foreign_keys' => true,
+
+    'user_model' => '',
 
     /*
      * Enable the process stamps (sub) package to log which process/url/job invoked a change.

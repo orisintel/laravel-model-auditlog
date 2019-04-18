@@ -20,7 +20,7 @@ trait AuditLoggable
      */
     public function getAuditLogModelName() : string
     {
-        return get_class($this) . config('model-auditlog.default_model_suffix');
+        return get_class($this) . config('model-auditlog.model_suffix');
     }
 
     /**
@@ -40,7 +40,7 @@ trait AuditLoggable
      */
     public function getAuditLogTableName() : string
     {
-        return $this->getTable() . config('model-auditlog.default_table_suffix');
+        return $this->getTable() . config('model-auditlog.table_suffix');
     }
 
     /**
