@@ -17,6 +17,7 @@ class {CLASS_NAME} extends Migration
             $table->increments('id')->unsigned();
             $table->unsignedInteger('subject_id')->index();
             $table->unsignedInteger('user_id')->nullable()->index();
+            $table->unsignedTinyInteger('event_type')->index();
             $table->string('field')->index();
             $table->string('value_from')->nullable()->index();
             $table->string('value_to')->nullable()->index();
