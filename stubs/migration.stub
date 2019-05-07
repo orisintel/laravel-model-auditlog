@@ -18,9 +18,10 @@ class {CLASS_NAME} extends Migration
             $table->unsignedInteger('subject_id')->index();
             $table->unsignedInteger('user_id')->nullable()->index();
             $table->unsignedTinyInteger('event_type')->index();
-            $table->string('field')->index();
-            $table->string('value_from')->nullable()->index();
-            $table->string('value_to')->nullable()->index();
+            $table->string('field_name')->index();
+            $table->string('field_value_old')->nullable()->index();
+            $table->string('field_value_new')->nullable()->index();
+            $table->timestamp('occurred_at')->index();
             $table->timestamps();
             {PROCESS_IDS_SETUP}
 
