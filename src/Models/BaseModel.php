@@ -35,7 +35,7 @@ abstract class BaseModel extends Model
 
         collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
-            ->except([$this->getKeyName()]) // Ignore the current model's primary key
+            ->except([$model->getKeyName()]) // Ignore the current model's primary key
             ->each(function ($change, $key) use ($event_type, $model) {
                 $log = new static();
                 $log->event_type = $event_type;
