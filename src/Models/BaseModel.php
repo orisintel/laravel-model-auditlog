@@ -26,7 +26,7 @@ abstract class BaseModel extends Model
                 $changes = $model->getDirty();
                 break;
             case EventType::CREATED:
-                $changes = $model->toArray();
+                $changes = $model->getAttributes();
                 break;
             case EventType::RESTORED:
                 $changes = $model->getChanges();
