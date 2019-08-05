@@ -51,4 +51,9 @@ return [
         'created_at',
         'updated_at',
     ],
+
+    /*
+     * Function on the auth service provider that will return the user id editing a model
+     */
+    'auth_id_function' => 'id',
 ];
