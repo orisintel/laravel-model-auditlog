@@ -41,6 +41,11 @@ abstract class BaseModel extends Model
                 $log->event_type = $event_type;
                 $log->subject_id = $model->getKey();
                 $log->occurred_at = now();
+
+                if (config('model-auditlog.enable_user_foreign_keys')) {
+                    $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
+                }
+
                 $log->setAttribute('field_name', $key);
                 $log->setAttribute('field_value_old', $model->getOriginal($key));
                 $log->setAttribute('field_value_new', $change);
