@@ -31,11 +31,20 @@ abstract class BaseModel extends Model
             case EventType::RESTORED:
                 $changes = $model->getChanges();
                 break;
+            case EventType::FORCE_DELETED:
+                return; // if force deleted we want to stop execution here as there would be nothing to correlate records to
+                break;
         }
 
         collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
-            ->except([$model->getKeyName()]) // Ignore the current model's primary key
+            ->except([
+                $model->getKeyName(), // Ignore the current model's primary key
+                'created_at',
+                'updated_at',
+                'date_created',
+                'date_modified',
+            ])
             ->each(function ($change, $key) use ($event_type, $model) {
                 $log = new static();
                 $log->event_type = $event_type;

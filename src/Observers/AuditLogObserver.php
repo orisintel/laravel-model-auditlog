@@ -30,8 +30,16 @@ class AuditLogObserver
      */
     public function deleted($model) : void
     {
+        /*
+         * If a model is hard deleting, either via a force delete or that model does not implement
+         * the SoftDeletes trait we should tag it as such so logging doesn't occur down the pipe.
+         */
+        if (! method_exists($model, 'isForceDeleting') || $model->isForceDeleting()) {
+            $event = EventType::FORCE_DELETED;
+        }
+
         $this->getAuditLogModel($model)
-            ->recordChanges(EventType::DELETED, $model);
+            ->recordChanges($event ?? EventType::DELETED, $model);
     }
 
     /**
