@@ -5,6 +5,7 @@ namespace OrisIntel\AuditLog\Tests;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use OrisIntel\AuditLog\EventType;
+use OrisIntel\AuditLog\Tests\Fakes\Models\NonSoftDeletePost;
 use OrisIntel\AuditLog\Tests\Fakes\Models\Post;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostAuditLog;
 
@@ -90,6 +91,38 @@ class PostModelTest extends TestCase
         $this->assertEquals('deleted_at', $last->field_name);
         $this->assertNull($last->field_value_old);
         $this->assertNotEmpty($last->field_value_new);
+    }
+
+    /** @test */
+    public function force_deleting_a_post_does_not_trigger_a_revision()
+    {
+        /** @var Post $post */
+        $post = Post::create([
+            'title'     => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $this->assertEquals(2, $post->auditLogs()->count());
+
+        $post->forceDelete();
+
+        $this->assertEquals(2, $post->auditLogs()->count());
+    }
+
+    /** @test */
+    public function deleting_a_non_soft_deleting_post_does_not_trigger_a_revision()
+    {
+        /** @var Post $post */
+        $post = NonSoftDeletePost::create([
+            'title'     => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $this->assertEquals(2, $post->auditLogs()->count());
+
+        $post->forceDelete();
+
+        $this->assertEquals(2, $post->auditLogs()->count());
     }
 
     /** @test */
