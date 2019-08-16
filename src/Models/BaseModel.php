@@ -31,6 +31,9 @@ abstract class BaseModel extends Model
             case EventType::RESTORED:
                 $changes = $model->getChanges();
                 break;
+            case EventType::FORCE_DELETED:
+                return; // if force deleted we want to stop execution here as there would be nothing to correlate records to
+                break;
         }
 
         collect($changes)

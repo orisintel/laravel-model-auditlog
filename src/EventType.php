@@ -8,4 +8,5 @@ class EventType
     const UPDATED = 2;
     const DELETED = 3;
     const RESTORED = 4;
+    const FORCE_DELETED = 5;
 }
