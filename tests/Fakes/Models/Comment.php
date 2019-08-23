@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OrisIntel\AuditLog\Traits\AuditLoggable;
 
-class Post extends Model
+class Comment extends Model
 {
     use AuditLoggable;
     use SoftDeletes;
 
     protected $guarded = [];
 
-    public function comments()
+    public function posts()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Post::class);
     }
 }
