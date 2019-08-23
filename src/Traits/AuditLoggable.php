@@ -44,6 +44,16 @@ trait AuditLoggable
     }
 
     /**
+     * Get fields that should be ignored from the auditlog for this model.
+     *
+     * @return array
+     */
+    public function getAuditLogIgnoredFields() : array
+    {
+        return [];
+    }
+
+    /**
      * Get the audit logs for this model.
      *
      * @return HasMany|null
