@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OrisIntel\AuditLog\Traits\AuditLoggable;
 
-class Comment extends Model
+class Tag extends Model
 {
     use AuditLoggable;
     use SoftDeletes;
@@ -15,6 +15,7 @@ class Comment extends Model
 
     public function posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->belongsToMany(Post::class)
+            ->using(PostTag::class);;
     }
 }

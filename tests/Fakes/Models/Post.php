@@ -13,8 +13,9 @@ class Post extends Model
 
     protected $guarded = [];
 
-    public function comments()
+    public function tags()
     {
-        return $this->hasMany(Comment::class);
+        return $this->belongsToMany(Tag::class)
+            ->using(PostTag::class);
     }
 }

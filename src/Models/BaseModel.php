@@ -27,25 +27,35 @@ abstract class BaseModel extends Model
             return;
         }
 
-        collect($changes)
+        $passing_changes = collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
             ->except($model->getAuditLogIgnoredFields())
-            ->except($model->getAuditLogForeignKeyColumnKeys())
             ->except([
                 $model->getKeyName(), // Ignore the current model's primary key
                 'created_at',
                 'updated_at',
                 'date_created',
                 'date_modified',
-            ])
+            ]);
+
+        var_dump($model->getTable());
+
+        var_dump('changes', $changes);
+        var_dump('passing_changes', $passing_changes);
+
+        $passing_changes
             ->each(function ($change, $key) use ($event_type, $model) {
                 $log = new static();
                 $log->event_type = $event_type;
                 $log->occurred_at = now();
 
+                //need to match $log->getAuditLogForeignKeyColumnKeys to $model->getAuditLogForeignKeyColumnValues
+                //in some decently efficient way
                 $log->fill(
                     $model->getAuditLogForeignKeyColumns()
                 );
+
+                var_dump($log);
 
                 if (config('model-auditlog.enable_user_foreign_keys')) {
                     $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
