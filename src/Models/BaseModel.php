@@ -19,26 +19,18 @@ abstract class BaseModel extends Model
      * @param int   $event_type
      * @param Model $model
      */
-    public static function recordChanges(int $event_type, $model) : void
+    public function recordChanges(int $event_type, $model) : void
     {
-        switch ($event_type) {
-            default:
-                $changes = $model->getDirty();
-                break;
-            case EventType::CREATED:
-                $changes = $model->getAttributes();
-                break;
-            case EventType::RESTORED:
-                $changes = $model->getChanges();
-                break;
-            case EventType::FORCE_DELETED:
-                return; // if force deleted we want to stop execution here as there would be nothing to correlate records to
-                break;
+        $changes = $this->getChanges($event_type, $model);
+        if (! $changes) {
+            //break for force delete
+            return;
         }
 
         collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
             ->except($model->getAuditLogIgnoredFields())
+            ->except($model->getAuditLogPivotKeys())
             ->except([
                 $model->getKeyName(), // Ignore the current model's primary key
                 'created_at',
@@ -49,8 +41,10 @@ abstract class BaseModel extends Model
             ->each(function ($change, $key) use ($event_type, $model) {
                 $log = new static();
                 $log->event_type = $event_type;
-                $log->subject_id = $model->getKey();
                 $log->occurred_at = now();
+
+                $log->fill($model->getAuditLogPivotKeys() ??
+                    ['subject_id' => $model->getKey()]);
 
                 if (config('model-auditlog.enable_user_foreign_keys')) {
                     $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
@@ -62,6 +56,29 @@ abstract class BaseModel extends Model
                 $log->save();
             });
     }
+
+    /**
+     * @param $event_type
+     * @param $model
+     */
+    public static function getChanges($event_type, $model)
+    {
+        switch ($event_type) {
+            default:
+                return $model->getDirty();
+                break;
+            case EventType::CREATED:
+                return $model->getAttributes();
+                break;
+            case EventType::RESTORED:
+                return $model->getChanges();
+                break;
+            case EventType::FORCE_DELETED:
+                return; // if force deleted we want to stop execution here as there would be nothing to correlate records to
+                break;
+        }
+    }
+
 
     /**
      * @return BelongsTo|null
