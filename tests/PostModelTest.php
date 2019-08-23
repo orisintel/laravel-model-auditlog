@@ -150,7 +150,9 @@ class PostModelTest extends TestCase
         $this->assertNull($last->field_value_new);
     }
 
-    /** @test */
+    /** @test
+     * @group failing
+     */
     public function fields_can_be_ignored()
     {
         /** @var Post $post */

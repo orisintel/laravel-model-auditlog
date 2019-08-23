@@ -19,9 +19,9 @@ abstract class BaseModel extends Model
      * @param int   $event_type
      * @param Model $model
      */
-    public function recordChanges(int $event_type, $model) : void
+    public static function recordChanges(int $event_type, $model) : void
     {
-        $changes = $this->getChanges($event_type, $model);
+        $changes = self::getChangeType($event_type, $model);
         if (! $changes) {
             //break for force delete
             return;
@@ -30,7 +30,7 @@ abstract class BaseModel extends Model
         collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
             ->except($model->getAuditLogIgnoredFields())
-            ->except($model->getAuditLogPivotKeys())
+            ->except($model->getAuditLogForeignKeyColumnKeys())
             ->except([
                 $model->getKeyName(), // Ignore the current model's primary key
                 'created_at',
@@ -43,8 +43,9 @@ abstract class BaseModel extends Model
                 $log->event_type = $event_type;
                 $log->occurred_at = now();
 
-                $log->fill($model->getAuditLogPivotKeys() ??
-                    ['subject_id' => $model->getKey()]);
+                $log->fill(
+                    $model->getAuditLogForeignKeyColumns()
+                );
 
                 if (config('model-auditlog.enable_user_foreign_keys')) {
                     $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
@@ -61,7 +62,7 @@ abstract class BaseModel extends Model
      * @param $event_type
      * @param $model
      */
-    public static function getChanges($event_type, $model)
+    public static function getChangeType($event_type, $model)
     {
         switch ($event_type) {
             default:

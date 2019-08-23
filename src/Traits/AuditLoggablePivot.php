@@ -16,7 +16,7 @@ trait AuditLoggablePivot
      *
      * @return array
      */
-    public function getAuditLogPivotKeys() : array
+    public function getAuditLogForeignKeyColumns() : array
     {
         return $this->getAuditLogModelInstance()->audit_loggable_keys;
     }
@@ -30,8 +30,8 @@ trait AuditLoggablePivot
     {
         return $this->hasMany(
             $this->getAuditLogModelName(),
-            array_keys($this->getAuditLogPivotKeys()),
-            array_values($this->getAuditLogPivotKeys())
+            array_keys($this->getAuditLogForeignKeyColumns()),
+            array_values($this->getAuditLogForeignKeyColumns())
         );
     }
 }
