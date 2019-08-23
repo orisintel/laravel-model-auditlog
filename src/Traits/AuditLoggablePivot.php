@@ -4,7 +4,6 @@ namespace OrisIntel\AuditLog\Traits;
 
 use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use OrisIntel\AuditLog\AuditLog;
 
 trait AuditLoggablePivot
 {
@@ -12,7 +11,7 @@ trait AuditLoggablePivot
     use Compoships;
 
     /**
-     * Returns audit_loggable_keys set on AuditLogModelInstance
+     * Returns audit_loggable_keys set on AuditLogModelInstance.
      *
      * @return array
      */

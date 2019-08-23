@@ -64,7 +64,7 @@ trait AuditLoggable
     }
 
     /**
-     * Get the columns used in the foreign key on the audit log table
+     * Get the columns used in the foreign key on the audit log table.
      *
      * @return array
      */
@@ -74,7 +74,7 @@ trait AuditLoggable
     }
 
     /**
-     * Get the columns used in the unique index on the model table
+     * Get the columns used in the unique index on the model table.
      *
      * @return array
      */

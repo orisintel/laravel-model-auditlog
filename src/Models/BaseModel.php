@@ -80,7 +80,6 @@ abstract class BaseModel extends Model
         }
     }
 
-
     /**
      * @return BelongsTo|null
      */
