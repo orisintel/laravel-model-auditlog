@@ -3,13 +3,11 @@
 namespace OrisIntel\AuditLog\Tests;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Collection;
 use OrisIntel\AuditLog\EventType;
-use OrisIntel\AuditLog\Tests\Fakes\Models\Tag;
-use OrisIntel\AuditLog\Tests\Fakes\Models\TagAuditLog;
+use OrisIntel\AuditLog\Tests\Fakes\Models\Post;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostTag;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostTagAuditLog;
-use OrisIntel\AuditLog\Tests\Fakes\Models\Post;
+use OrisIntel\AuditLog\Tests\Fakes\Models\Tag;
 
 class PostTagModelTest extends TestCase
 {
@@ -37,7 +35,7 @@ class PostTagModelTest extends TestCase
     {
         /** @var Tag $tag */
         $tag = Tag::create([
-            'title'   => 'Here is a comment!',
+            'title'     => 'Here is a comment!',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
@@ -65,5 +63,4 @@ class PostTagModelTest extends TestCase
         $this->assertNull($tagged->field_value_old);
         $this->assertEquals('2019-04-05 12:00:00', $tagged->field_value_new);*/
     }
-
 }

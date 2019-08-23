@@ -31,7 +31,7 @@ class TagModelTest extends TestCase
     {
         /** @var Tag $tag */
         $tag = Tag::create([
-            'title'   => 'Tag',
+            'title'     => 'Tag',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
@@ -55,7 +55,7 @@ class TagModelTest extends TestCase
     {
         /** @var Tag $tag */
         $tag = Tag::create([
-            'title'   => 'Test',
+            'title'     => 'Test',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
@@ -76,7 +76,7 @@ class TagModelTest extends TestCase
     {
         /** @var Tag $tag */
         $tag = Tag::create([
-            'title'   => 'Test',
+            'title'     => 'Test',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
@@ -97,7 +97,7 @@ class TagModelTest extends TestCase
     {
         /** @var Tag $tag */
         $tag = Tag::create([
-            'title'   => 'Test',
+            'title'     => 'Test',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 

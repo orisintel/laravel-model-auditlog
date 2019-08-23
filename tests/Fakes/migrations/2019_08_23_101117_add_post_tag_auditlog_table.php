@@ -24,8 +24,8 @@ class AddPostTagAuditLogTable extends Migration
             $table->text('field_value_new')->nullable();
             $table->timestamp('occurred_at')->index()->default('CURRENT_TIMESTAMP');
 
-            $table->foreign(['post_id','tag_id'])
-                ->references(['post_id','tag_id'])
+            $table->foreign(['post_id', 'tag_id'])
+                ->references(['post_id', 'tag_id'])
                 ->on('post_tag');
         });
     }

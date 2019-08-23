@@ -11,6 +11,4 @@ class PostTagAuditLog extends BaseModel
     public $table = 'post_tag_auditlog';
 
     protected $guarded = [];
-
-
 }
