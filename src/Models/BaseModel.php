@@ -38,6 +38,7 @@ abstract class BaseModel extends Model
 
         collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
+            ->except($model->getAuditLogIgnoredFields())
             ->except([
                 $model->getKeyName(), // Ignore the current model's primary key
                 'created_at',

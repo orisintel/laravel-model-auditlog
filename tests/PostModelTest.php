@@ -5,6 +5,7 @@ namespace OrisIntel\AuditLog\Tests;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use OrisIntel\AuditLog\EventType;
+use OrisIntel\AuditLog\Tests\Fakes\Models\IgnoredFieldsPost;
 use OrisIntel\AuditLog\Tests\Fakes\Models\NonSoftDeletePost;
 use OrisIntel\AuditLog\Tests\Fakes\Models\Post;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostAuditLog;
@@ -147,5 +148,21 @@ class PostModelTest extends TestCase
         $last = $post->auditLogs()->where('event_type', EventType::RESTORED)->first();
         $this->assertEquals('deleted_at', $last->field_name);
         $this->assertNull($last->field_value_new);
+    }
+
+    /** @test */
+    public function fields_can_be_ignored()
+    {
+        /** @var Post $post */
+        $post = IgnoredFieldsPost::create([
+            'title'     => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $this->assertEquals(1, $post->auditLogs()->count());
+
+        $post->update(['posted_at' => now()]);
+
+        $this->assertEquals(1, $post->auditLogs()->count());
     }
 }

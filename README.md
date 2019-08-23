@@ -42,6 +42,27 @@ php artisan make:model-auditlog "\App\User"
 
 Replace `\App\User` with your own model name. Model / table options can be tweaked in the config file.
 
+If you need to ignore specific fields on your model, extend the `getAuditLogIgnoredFields()` method and return an array of fields.
+
+```php
+public function getAuditLogIgnoredFields() : array
+{
+    return ['posted_at'];
+}
+```
+
+Using that functionality, you can add more custom logic around what should be logged. An example might be to not log the title changes of a post if the post has not been published yet.
+```php
+public function getAuditLogIgnoredFields() : array
+{
+    if ($this->postHasBeenPublished()) {
+        return ['title'];
+    }
+
+    return [];
+}
+```
+
 ### Testing
 
 ``` bash
