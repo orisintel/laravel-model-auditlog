@@ -29,8 +29,8 @@ trait AuditLoggablePivot
     {
         return $this->hasMany(
             $this->getAuditLogModelName(),
-            $this->getAuditLogForeignKeyColumnKeys(),
-            $this->getAuditLogForeignKeyColumnValues()
+            $this->getAuditLogForeignKeyColumnValues(),
+            $this->getAuditLogForeignKeyColumnKeys()
         );
     }
 }

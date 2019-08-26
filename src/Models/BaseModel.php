@@ -38,24 +38,15 @@ abstract class BaseModel extends Model
                 'date_modified',
             ]);
 
-        var_dump($model->getTable());
-
-        var_dump('changes', $changes);
-        var_dump('passing_changes', $passing_changes);
-
         $passing_changes
             ->each(function ($change, $key) use ($event_type, $model) {
                 $log = new static();
                 $log->event_type = $event_type;
                 $log->occurred_at = now();
 
-                //need to match $log->getAuditLogForeignKeyColumnKeys to $model->getAuditLogForeignKeyColumnValues
-                //in some decently efficient way
-                $log->fill(
-                    $model->getAuditLogForeignKeyColumns()
-                );
-
-                var_dump($log);
+                foreach($model->getAuditLogForeignKeyColumns() as $k => $v) {
+                    $log->setAttribute($k, $model->$v);
+                }
 
                 if (config('model-auditlog.enable_user_foreign_keys')) {
                     $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
@@ -75,9 +66,6 @@ abstract class BaseModel extends Model
     public static function getChangeType($event_type, $model)
     {
         switch ($event_type) {
-            default:
-                return $model->getDirty();
-                break;
             case EventType::CREATED:
                 return $model->getAttributes();
                 break;
@@ -86,6 +74,9 @@ abstract class BaseModel extends Model
                 break;
             case EventType::FORCE_DELETED:
                 return; // if force deleted we want to stop execution here as there would be nothing to correlate records to
+                break;
+            default:
+                return $model->getDirty();
                 break;
         }
     }

@@ -4,6 +4,7 @@ namespace OrisIntel\AuditLog\Observers;
 
 use Illuminate\Database\Eloquent\Model;
 use OrisIntel\AuditLog\EventType;
+use OrisIntel\AuditLog\Tests\Fakes\Models\PostTag;
 
 class AuditLogObserver
 {
@@ -34,7 +35,7 @@ class AuditLogObserver
          * If a model is hard deleting, either via a force delete or that model does not implement
          * the SoftDeletes trait we should tag it as such so logging doesn't occur down the pipe.
          */
-        if (! method_exists($model, 'isForceDeleting') || $model->isForceDeleting()) {
+        if ((! method_exists($model, 'isForceDeleting') || $model->isForceDeleting())) {
             $event = EventType::FORCE_DELETED;
         }
 

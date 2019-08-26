@@ -60,7 +60,7 @@ trait AuditLoggable
      */
     public function getAuditLogForeignKeyColumns() : array
     {
-        return ['subject_id' => $this->getKey()];
+        return ['subject_id' => $this->getKeyName()];
     }
 
     /**

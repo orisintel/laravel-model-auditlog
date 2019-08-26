@@ -5,9 +5,9 @@ namespace OrisIntel\AuditLog\Tests;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use OrisIntel\AuditLog\EventType;
 use OrisIntel\AuditLog\Tests\Fakes\Models\Post;
+use OrisIntel\AuditLog\Tests\Fakes\Models\Tag;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostTag;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostTagAuditLog;
-use OrisIntel\AuditLog\Tests\Fakes\Models\Tag;
 
 class PostTagModelTest extends TestCase
 {
@@ -27,10 +27,7 @@ class PostTagModelTest extends TestCase
         $this->assertInstanceOf(PostTagAuditLog::class, $tag_post->getAuditLogModelInstance());
     }
 
-    /** @test
-     *
-     * @group failing
-     */
+    /** @test */
     public function creating_a_post_tag_triggers_a_revision()
     {
         /** @var Tag $tag */
@@ -47,20 +44,110 @@ class PostTagModelTest extends TestCase
 
         $post->tags()->sync($tag);
 
-        var_dump(PostTagAuditLog::all());
+        /** @var PostTag $post_tag */
+        $post_tag = PostTag::first();
 
-        /*
-        $logs = $tag->auditLogs()->where('event_type', EventType::CREATED)->get();
+        $logs = $post_tag->auditLogs()->where('event_type', EventType::CREATED)->get();
         $this->assertEquals(2, $logs->count());
 
-        $title = $logs->where('field_name', 'tag')->first();
-        $this->assertEquals('tag', $title->field_name);
-        $this->assertNull($title->field_value_old);
-        $this->assertEquals('tag', $title->field_value_new);
+        $title = $logs->where('field_name', 'tag_id')->first();
+        $this->assertEquals('tag_id', $title->field_name);
+        $this->assertEquals(1, $title->field_value_new);
 
-        $tagged = $logs->where('field_name', 'posted_at')->first();
-        $this->assertEquals('posted_at', $tagged->field_name);
-        $this->assertNull($tagged->field_value_old);
-        $this->assertEquals('2019-04-05 12:00:00', $tagged->field_value_new);*/
+        $tagged = $logs->where('field_name', 'post_id')->first();
+        $this->assertEquals('post_id', $tagged->field_name);
+        $this->assertEquals(1, $tagged->field_value_new);
+    }
+
+    /** @test */
+    public function syncing_triggers_a_revision()
+    {
+        $tag1 = Tag::create([
+            'title'   => 'Here is a comment!',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $tag2 = Tag::create([
+            'title'   => 'Here is another comment!',
+            'posted_at' => '2019-04-06 12:00:00',
+        ]);
+
+        /** @var Post $post */
+        $post = Post::create([
+            'title'     => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $post->tags()->sync($tag1);
+
+        //Audit log record for each id in composite key
+        $this->assertEquals(2, PostTagAuditLog::all()->count());
+        //hasMany relationship works on tag model to audit log
+        $this->assertEquals(2, $tag1->auditLogs()->count());
+        //Record correct in pivot
+        $this->assertEquals(1, PostTag::where('post_id', 1)->where('tag_id', 1)->count());
+
+        $post->tags()->sync($tag2);
+
+        //Audit log record for each id in composite key, including the second sync
+        $this->assertEquals(4, PostTagAuditLog::all()->count());
+        //hasMany relationship works on new tag model to audit log
+        $this->assertEquals(2, $tag2->auditLogs()->count());
+
+        //Correct data after sync
+        $this->assertEquals(1, PostTag::where('post_id', 1)->where('tag_id', 2)->count());
+        $this->assertEquals(0, PostTag::where('post_id', 1)->where('tag_id', 1)->count());
+    }
+
+    /** @test
+     *
+     * @group failing
+     *
+     */
+    public function deleting_a_tag_triggers_a_revision()
+    {
+        $tag1 = Tag::create([
+            'title'   => 'Here is a comment!',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        /** @var Post $post */
+        $post = Post::create([
+            'title'     => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $post->tags()->sync($tag1);
+
+        //Audit log record for each id in composite key
+        $this->assertEquals(2, PostTagAuditLog::all()->count());
+        //hasMany relationship works on tag model to audit log
+        $this->assertEquals(2, $tag1->auditLogs()->count());
+        //Record correct in pivot
+        $this->assertEquals(1, PostTag::where('post_id', 1)->where('tag_id', 1)->count());
+
+        $post->tags()->detach(['post_id' => 1]);
+
+        //Audit log record for each id in composite key, including the second sync
+        $this->assertEquals(4, PostTagAuditLog::all()->count());
+
+        //Correct data after sync
+        $this->assertEquals(0, PostTag::where('post_id', 1)->count());
+    }
+
+    /** @test */
+    public function force_deleting_a_tag_does_not_trigger_a_revision()
+    {
+        /** @var Tag $tag */
+        $tag = Tag::create([
+            'title'   => 'Test',
+            'posted_at' => '2019-04-05 12:00:00',
+        ]);
+
+        $this->assertEquals(2, $tag->auditLogs()->count());
+
+        $tag->forceDelete();
+
+        $this->assertEquals(2, $tag->auditLogs()->count());
     }
 }
