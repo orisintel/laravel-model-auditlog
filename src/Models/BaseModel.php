@@ -44,7 +44,7 @@ abstract class BaseModel extends Model
                 $log->event_type = $event_type;
                 $log->occurred_at = now();
 
-                foreach($model->getAuditLogForeignKeyColumns() as $k => $v) {
+                foreach ($model->getAuditLogForeignKeyColumns() as $k => $v) {
                     $log->setAttribute($k, $model->$v);
                 }
 

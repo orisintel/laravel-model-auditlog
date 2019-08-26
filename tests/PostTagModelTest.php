@@ -5,9 +5,9 @@ namespace OrisIntel\AuditLog\Tests;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use OrisIntel\AuditLog\EventType;
 use OrisIntel\AuditLog\Tests\Fakes\Models\Post;
-use OrisIntel\AuditLog\Tests\Fakes\Models\Tag;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostTag;
 use OrisIntel\AuditLog\Tests\Fakes\Models\PostTagAuditLog;
+use OrisIntel\AuditLog\Tests\Fakes\Models\Tag;
 
 class PostTagModelTest extends TestCase
 {
@@ -63,12 +63,12 @@ class PostTagModelTest extends TestCase
     public function syncing_triggers_a_revision()
     {
         $tag1 = Tag::create([
-            'title'   => 'Here is a comment!',
+            'title'     => 'Here is a comment!',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
         $tag2 = Tag::create([
-            'title'   => 'Here is another comment!',
+            'title'     => 'Here is another comment!',
             'posted_at' => '2019-04-06 12:00:00',
         ]);
 
@@ -102,12 +102,11 @@ class PostTagModelTest extends TestCase
     /** @test
      *
      * @group failing
-     *
      */
     public function deleting_a_tag_triggers_a_revision()
     {
         $tag1 = Tag::create([
-            'title'   => 'Here is a comment!',
+            'title'     => 'Here is a comment!',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
@@ -140,7 +139,7 @@ class PostTagModelTest extends TestCase
     {
         /** @var Tag $tag */
         $tag = Tag::create([
-            'title'   => 'Test',
+            'title'     => 'Test',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 

@@ -4,7 +4,6 @@ namespace OrisIntel\AuditLog\Observers;
 
 use Illuminate\Database\Eloquent\Model;
 use OrisIntel\AuditLog\EventType;
-use OrisIntel\AuditLog\Tests\Fakes\Models\PostTag;
 
 class AuditLogObserver
 {
