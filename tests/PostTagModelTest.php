@@ -122,7 +122,7 @@ class PostTagModelTest extends TestCase
         //hasMany relationship works on tag model to audit log
         $this->assertEquals(2, $tag1->auditLogs()->count());
         //Record correct in pivot
-        $this->assertEquals(1, PostTag::where('post_id', 1)->where('tag_id', 1)->count());
+        $this->assertEquals(1, PostTag::where('post_id', 2000)->where('tag_id', 50)->count());
 
         $tag2 = Tag::create([
             'id'        => 99,
