@@ -15,7 +15,7 @@ class AddPostTagAuditLogTable extends Migration
     {
         Schema::create('post_tag_auditlog', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('post_id')->index();
+            $table->unsignedInteger('audit_post_id')->index();
             $table->unsignedInteger('tag_id')->index();
             $table->unsignedTinyInteger('event_type')->index();
             $table->unsignedInteger('user_id')->nullable()->index();

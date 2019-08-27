@@ -80,18 +80,17 @@ abstract class BaseModel extends Model
             });
     }
 
+    /**
+     * @param int $event_type
+     * @param $model
+     * @param string $relationName
+     * @param array $pivotIds
+     */
     public function recordPivotChanges(int $event_type, $model, string $relationName, array $pivotIds) : void
     {
         $pivot = $model->{$relationName}()->getPivotClass();
 
-        $changes = [];
-        foreach ((new $pivot())->getAuditLogForeignKeyColumns() as $k => $v) {
-            if ($v !== $model->getForeignKey()) {
-                $changes[$v] = $pivotIds[0];
-            } else {
-                $changes[$v] = $model->getKey();
-            }
-        }
+        $changes = $this->getPivotChanges($pivot, $model, $pivotIds);
 
         $this->savePivotChanges(
             $this->passingChanges($changes, $model),
@@ -100,7 +99,32 @@ abstract class BaseModel extends Model
         );
     }
 
-    public function savePivotChanges(Collection $passing_changes, int $event_type, $pivot)
+    /**
+     * @param $pivot
+     * @param $model
+     * @param $pivotIds
+     * @return array
+     */
+    public function getPivotChanges($pivot, $model, $pivotIds) : array
+    {
+        $changes = [];
+        foreach ((new $pivot())->getAuditLogForeignKeyColumns() as $k => $v) {
+            if ($v !== $model->getForeignKey()) {
+                $changes[$k] = $pivotIds[0];
+            } else {
+                $changes[$k] = $model->getKey();
+            }
+        }
+
+        return $changes;
+    }
+
+    /**
+     * @param Collection $passing_changes
+     * @param int $event_type
+     * @param $pivot
+     */
+    public function savePivotChanges(Collection $passing_changes, int $event_type, $pivot) : void
     {
         $passing_changes
             ->each(function ($change, $key) use ($event_type, $passing_changes, $pivot) {

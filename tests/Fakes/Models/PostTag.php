@@ -11,8 +11,14 @@ class PostTag extends Pivot
 
     protected $guarded = [];
 
+    /**
+     * The array keys are the composite key in the audit log
+     * table while the pivot table columns are the values
+     *
+     * @var array
+     */
     protected $audit_loggable_keys = [
-        'post_id' => 'post_id',
+        'audit_post_id' => 'post_id',
         'tag_id'  => 'tag_id',
     ];
 }
