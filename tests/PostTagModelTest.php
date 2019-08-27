@@ -90,28 +90,27 @@ class PostTagModelTest extends TestCase
         $post->tags()->sync($tag2);
 
         //Audit log record for each id in composite key, including the second sync
-        $this->assertEquals(4, PostTagAuditLog::all()->count());
-        //hasMany relationship works on new tag model to audit log
+        $this->assertEquals(6, PostTagAuditLog::all()->count());
+        // hasMany relationship works on new tag model to audit log
         $this->assertEquals(2, $tag2->auditLogs()->count());
 
-        //Correct data after sync
+        //Correct data count after sync
         $this->assertEquals(1, PostTag::where('post_id', 1)->where('tag_id', 2)->count());
         $this->assertEquals(0, PostTag::where('post_id', 1)->where('tag_id', 1)->count());
     }
 
-    /** @test
-     *
-     * @group failing
-     */
-    public function deleting_a_tag_triggers_a_revision()
+    /** @test */
+    public function deleting_a_post_tag_does_not_trigger_a_revision()
     {
         $tag1 = Tag::create([
-            'title'     => 'Here is a comment!',
+            'id' => 50,
+            'title'   => 'Here is a comment!',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
         /** @var Post $post */
         $post = Post::create([
+            'id' => 2000,
             'title'     => 'Test',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
@@ -125,28 +124,23 @@ class PostTagModelTest extends TestCase
         //Record correct in pivot
         $this->assertEquals(1, PostTag::where('post_id', 1)->where('tag_id', 1)->count());
 
-        $post->tags()->detach(['post_id' => 1]);
-
-        //Audit log record for each id in composite key, including the second sync
-        $this->assertEquals(4, PostTagAuditLog::all()->count());
-
-        //Correct data after sync
-        $this->assertEquals(0, PostTag::where('post_id', 1)->count());
-    }
-
-    /** @test */
-    public function force_deleting_a_tag_does_not_trigger_a_revision()
-    {
-        /** @var Tag $tag */
-        $tag = Tag::create([
-            'title'     => 'Test',
-            'posted_at' => '2019-04-05 12:00:00',
+        $tag2 = Tag::create([
+            'id' => 99,
+            'title'   => 'Here is another comment!',
+            'posted_at' => '2019-04-06 12:00:00',
         ]);
 
-        $this->assertEquals(2, $tag->auditLogs()->count());
+        $post->tags()->sync($tag2);
 
-        $tag->forceDelete();
+        $this->assertEquals(6, PostTagAuditLog::all()->count());
 
-        $this->assertEquals(2, $tag->auditLogs()->count());
+        $post->tags()->sync([]);
+
+        // Sync/detach created a force delete situation where no changes are recorded
+        // and thus aren't saved to the audit log
+        $this->assertEquals(8, PostTagAuditLog::all()->count());
+
+        // Correct data count after sync
+        $this->assertEquals(0, PostTag::count());
     }
 }

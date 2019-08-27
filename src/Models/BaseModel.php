@@ -2,6 +2,7 @@
 
 namespace OrisIntel\AuditLog\Models;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use OrisIntel\AuditLog\EventType;
@@ -19,7 +20,7 @@ abstract class BaseModel extends Model
      * @param int   $event_type
      * @param Model $model
      */
-    public static function recordChanges(int $event_type, $model) : void
+    public function recordChanges(int $event_type, $model) : void
     {
         $changes = self::getChangeType($event_type, $model);
         if (! $changes) {
@@ -27,7 +28,21 @@ abstract class BaseModel extends Model
             return;
         }
 
-        $passing_changes = collect($changes)
+        $this->saveChanges(
+            $this->passingChanges($changes, $model),
+            $event_type,
+            $model
+        );
+    }
+
+    /**
+     * @param array $changes
+     * @param $model
+     * @return Collection
+     */
+    public function passingChanges(array $changes, $model) : Collection
+    {
+        return collect($changes)
             ->except(config('model-auditlog.global_ignored_fields'))
             ->except($model->getAuditLogIgnoredFields())
             ->except([
@@ -37,7 +52,10 @@ abstract class BaseModel extends Model
                 'date_created',
                 'date_modified',
             ]);
+    }
 
+    public function saveChanges(Collection $passing_changes, int $event_type, $model) : void
+    {
         $passing_changes
             ->each(function ($change, $key) use ($event_type, $model) {
                 $log = new static();
@@ -55,15 +73,63 @@ abstract class BaseModel extends Model
                 $log->setAttribute('field_name', $key);
                 $log->setAttribute('field_value_old', $model->getOriginal($key));
                 $log->setAttribute('field_value_new', $change);
+
+                $log->attributes;
+                $log->save();
+            });
+    }
+
+    public function recordPivotChanges(int $event_type, $model, string $relationName, array $pivotIds) : void
+    {
+        $pivot = $model->{$relationName}()->getPivotClass();
+
+        $changes = [];
+        foreach((new $pivot)->getAuditLogForeignKeyColumns() as $k => $v) {
+            if ($v !== $model->getForeignKey()) {
+                $changes[$v] = $pivotIds[0];
+            } else {
+                $changes[$v] = $model->getKey();
+            }
+        }
+
+        $this->savePivotChanges(
+            $this->passingChanges($changes, $model),
+            $event_type,
+            (new $pivot)
+        );
+    }
+
+    public function savePivotChanges(Collection $passing_changes, int $event_type, $pivot)
+    {
+        $passing_changes
+            ->each(function ($change, $key) use ($event_type, $passing_changes, $pivot) {
+                $log = $pivot->getAuditLogModelInstance();
+                $log->event_type = $event_type;
+                $log->occurred_at = now();
+
+                foreach($passing_changes as $k => $v) {
+                    $log->setAttribute($k, $v);
+                }
+
+                if (config('model-auditlog.enable_user_foreign_keys')) {
+                    $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
+                }
+
+                $log->setAttribute('field_name', $key);
+                $log->setAttribute('field_value_old', $change);
+                $log->setAttribute('field_value_new', null);
+
+                $log->attributes;
                 $log->save();
             });
     }
 
     /**
-     * @param $event_type
+     * @param int $event_type
      * @param $model
+     * @return array|null
      */
-    public static function getChangeType($event_type, $model)
+    public static function getChangeType(int $event_type, $model) : ?array
     {
         switch ($event_type) {
             case EventType::CREATED:
@@ -73,7 +139,7 @@ abstract class BaseModel extends Model
                 return $model->getChanges();
                 break;
             case EventType::FORCE_DELETED:
-                return; // if force deleted we want to stop execution here as there would be nothing to correlate records to
+                return null; // if force deleted we want to stop execution here as there would be nothing to correlate records to
                 break;
             default:
                 return $model->getDirty();
