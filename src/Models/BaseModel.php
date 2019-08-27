@@ -2,9 +2,9 @@
 
 namespace OrisIntel\AuditLog\Models;
 
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 use OrisIntel\AuditLog\EventType;
 
 /**
@@ -38,6 +38,7 @@ abstract class BaseModel extends Model
     /**
      * @param array $changes
      * @param $model
+     *
      * @return Collection
      */
     public function passingChanges(array $changes, $model) : Collection
@@ -84,7 +85,7 @@ abstract class BaseModel extends Model
         $pivot = $model->{$relationName}()->getPivotClass();
 
         $changes = [];
-        foreach((new $pivot)->getAuditLogForeignKeyColumns() as $k => $v) {
+        foreach ((new $pivot())->getAuditLogForeignKeyColumns() as $k => $v) {
             if ($v !== $model->getForeignKey()) {
                 $changes[$v] = $pivotIds[0];
             } else {
@@ -95,7 +96,7 @@ abstract class BaseModel extends Model
         $this->savePivotChanges(
             $this->passingChanges($changes, $model),
             $event_type,
-            (new $pivot)
+            (new $pivot())
         );
     }
 
@@ -107,7 +108,7 @@ abstract class BaseModel extends Model
                 $log->event_type = $event_type;
                 $log->occurred_at = now();
 
-                foreach($passing_changes as $k => $v) {
+                foreach ($passing_changes as $k => $v) {
                     $log->setAttribute($k, $v);
                 }
 
@@ -127,6 +128,7 @@ abstract class BaseModel extends Model
     /**
      * @param int $event_type
      * @param $model
+     *
      * @return array|null
      */
     public static function getChangeType(int $event_type, $model) : ?array

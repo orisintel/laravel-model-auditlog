@@ -103,14 +103,14 @@ class PostTagModelTest extends TestCase
     public function deleting_a_post_tag_does_not_trigger_a_revision()
     {
         $tag1 = Tag::create([
-            'id' => 50,
-            'title'   => 'Here is a comment!',
+            'id'        => 50,
+            'title'     => 'Here is a comment!',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
 
         /** @var Post $post */
         $post = Post::create([
-            'id' => 2000,
+            'id'        => 2000,
             'title'     => 'Test',
             'posted_at' => '2019-04-05 12:00:00',
         ]);
@@ -125,8 +125,8 @@ class PostTagModelTest extends TestCase
         $this->assertEquals(1, PostTag::where('post_id', 1)->where('tag_id', 1)->count());
 
         $tag2 = Tag::create([
-            'id' => 99,
-            'title'   => 'Here is another comment!',
+            'id'        => 99,
+            'title'     => 'Here is another comment!',
             'posted_at' => '2019-04-06 12:00:00',
         ]);
 
