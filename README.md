@@ -139,7 +139,21 @@ public function posts()
 
 When a pivot record is deleted through `detach` or `sync`, an audit log record for each of the keys (ex: `post_id` and `tag_id`) will added to the audit log table. The `field_value_old` will be the id of the record and the `field_value_new` will be null. The records will have an event type of `PIVOT_DELETED` (id: 6). 
 
-For a working example of this, see `laravel-model-auditlog/tests/Fakes`, which contains working migrations and models.
+If you need to pull the audit logs through the `auditLogs` relationship (ex: $post_tag->auditLogs()->get()), support for composite keys is required.
+```php
+composer require awobaz/compoships
+```
+Then use the trait on the pivot audit log model:
+```php
+use Awobaz\Compoships\Compoships;
+use OrisIntel\AuditLog\Models\BaseModel;
+
+class PostTagAuditLog extends BaseModel
+{
+    use Compoships;
+```
+
+For a working example of pivots with the audit log, see `laravel-model-auditlog/tests/Fakes`, which contains working migrations and models.
 
 ### Testing
 
