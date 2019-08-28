@@ -130,11 +130,13 @@ class PostTagModelTest extends TestCase
             'posted_at' => '2019-04-06 12:00:00',
         ]);
 
-        $post->tags()->sync($tag2);
+        $post->tags()->attach($tag2->id);
 
-        $this->assertEquals(6, PostTagAuditLog::all()->count());
+        $this->assertEquals(2, PostTag::count());
+        $this->assertEquals(4, PostTagAuditLog::all()->count());
 
-        $post->tags()->sync([]);
+        //detach both records
+        $post->tags()->detach();
 
         // Sync/detach created a force delete situation where no changes are recorded
         // and thus aren't saved to the audit log
