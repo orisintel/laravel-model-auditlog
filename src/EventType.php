@@ -9,4 +9,5 @@ class EventType
     const DELETED = 3;
     const RESTORED = 4;
     const FORCE_DELETED = 5;
+    const PIVOT_DELETED = 6;
 }

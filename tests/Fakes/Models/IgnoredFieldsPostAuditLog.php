@@ -9,4 +9,6 @@ class IgnoredFieldsPostAuditLog extends BaseModel
     public $timestamps = false;
 
     public $table = 'posts_auditlog';
+
+    protected $guarded = [];
 }

@@ -24,14 +24,16 @@
     ],
     "require": {
         "php": "^7.1",
-        "laravel/framework": "^5.6",
-        "orisintel/laravel-process-stamps": "^1.1"
+        "awobaz/compoships": "^1.1",
+        "fico7489/laravel-pivot": "^3.0.1",
+        "laravel/framework": "^5.8",
+        "orisintel/laravel-process-stamps": "^1.2"
     },
     "require-dev": {
         "doctrine/dbal": "^2.9",
         "larapack/dd": "^1.0",
         "mockery/mockery": "~1.0",
-        "orchestra/testbench": "^3.7",
+        "orchestra/testbench": "^3.8",
         "phpunit/phpunit": "^7.0"
     },
     "autoload": {

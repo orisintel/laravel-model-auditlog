@@ -4,11 +4,11 @@ namespace OrisIntel\AuditLog\Tests\Fakes\Models;
 
 use OrisIntel\AuditLog\Models\BaseModel;
 
-class NonSoftDeletePostAuditLog extends BaseModel
+class TagAuditLog extends BaseModel
 {
     public $timestamps = false;
 
-    public $table = 'posts_auditlog';
+    public $table = 'tags_auditlog';
 
     protected $guarded = [];
 }

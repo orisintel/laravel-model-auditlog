@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OrisIntel\AuditLog\Traits\AuditLoggable;
 
-class Post extends Model
+class Tag extends Model
 {
     use AuditLoggable;
     use SoftDeletes;
@@ -15,9 +15,9 @@ class Post extends Model
 
     protected $guarded = [];
 
-    public function tags()
+    public function posts()
     {
-        return $this->belongsToMany(Tag::class)
+        return $this->belongsToMany(Post::class)
             ->using(PostTag::class);
     }
 }

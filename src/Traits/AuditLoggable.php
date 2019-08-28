@@ -54,6 +54,36 @@ trait AuditLoggable
     }
 
     /**
+     * Get fields that should be used as keys on the auditlog for this model.
+     *
+     * @return array
+     */
+    public function getAuditLogForeignKeyColumns() : array
+    {
+        return ['subject_id' => $this->getKeyName()];
+    }
+
+    /**
+     * Get the columns used in the foreign key on the audit log table.
+     *
+     * @return array
+     */
+    public function getAuditLogForeignKeyColumnKeys() : array
+    {
+        return array_keys($this->getAuditLogForeignKeyColumns());
+    }
+
+    /**
+     * Get the columns used in the unique index on the model table.
+     *
+     * @return array
+     */
+    public function getAuditLogForeignKeyColumnValues() : array
+    {
+        return array_values($this->getAuditLogForeignKeyColumns());
+    }
+
+    /**
      * Get the audit logs for this model.
      *
      * @return HasMany|null
