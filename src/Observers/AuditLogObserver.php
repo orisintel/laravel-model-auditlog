@@ -56,7 +56,7 @@ class AuditLogObserver
      * @param $relationName
      * @param $pivotIds
      */
-    public function pivotDetached($model, $relationName, $pivotIds)
+    public function pivotDetached($model, string $relationName, array $pivotIds)
     {
         $this->getAuditLogModel($model)
             ->recordPivotChanges(EventType::PIVOT_DELETED, $model, $relationName, $pivotIds);

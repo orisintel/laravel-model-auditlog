@@ -68,7 +68,7 @@ trait AuditLoggable
      *
      * @return array
      */
-    public function getAuditLogForeignKeyColumnKeys()
+    public function getAuditLogForeignKeyColumnKeys() : array
     {
         return array_keys($this->getAuditLogForeignKeyColumns());
     }
@@ -78,7 +78,7 @@ trait AuditLoggable
      *
      * @return array
      */
-    public function getAuditLogForeignKeyColumnValues()
+    public function getAuditLogForeignKeyColumnValues() : array
     {
         return array_values($this->getAuditLogForeignKeyColumns());
     }

@@ -22,11 +22,7 @@ abstract class BaseModel extends Model
      */
     public function recordChanges(int $event_type, $model) : void
     {
-        $changes = self::getChangeType($event_type, $model);
-        if (! $changes) {
-            //break for force delete
-            return;
-        }
+        $changes = self::getChangesByType($event_type, $model);
 
         $this->saveChanges(
             $this->passingChanges($changes, $model),
@@ -108,7 +104,7 @@ abstract class BaseModel extends Model
      *
      * @return array
      */
-    public function getPivotChanges($pivot, $model, $pivotIds) : array
+    public function getPivotChanges($pivot, $model, array $pivotIds) : array
     {
         $changes = [];
         foreach ((new $pivot())->getAuditLogForeignKeyColumns() as $auditColumn => $pivotColumn) {
@@ -158,9 +154,9 @@ abstract class BaseModel extends Model
      * @param int $event_type
      * @param $model
      *
-     * @return array|null
+     * @return array
      */
-    public static function getChangeType(int $event_type, $model) : ?array
+    public static function getChangesByType(int $event_type, $model) : array
     {
         switch ($event_type) {
             case EventType::CREATED:
@@ -170,7 +166,7 @@ abstract class BaseModel extends Model
                 return $model->getChanges();
                 break;
             case EventType::FORCE_DELETED:
-                return null; // if force deleted we want to stop execution here as there would be nothing to correlate records to
+                return []; // if force deleted we want to stop execution here as there would be nothing to correlate records to
                 break;
             default:
                 return $model->getDirty();
