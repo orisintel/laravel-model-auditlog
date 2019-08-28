@@ -92,7 +92,7 @@ abstract class BaseModel extends Model
 
         $changes = $this->getPivotChanges($pivot, $model, $pivotIds);
 
-        foreach($changes as $change) {
+        foreach ($changes as $change) {
             $this->savePivotChanges(
                 $this->passingChanges($change, $model),
                 $event_type,
@@ -112,7 +112,7 @@ abstract class BaseModel extends Model
     {
         $changes = [];
         foreach ((new $pivot())->getAuditLogForeignKeyColumns() as $auditColumn => $pivotColumn) {
-            foreach($pivotIds as $id => $pivotId) {
+            foreach ($pivotIds as $id => $pivotId) {
                 if ($pivotColumn !== $model->getForeignKey()) {
                     $changes[$id][$auditColumn] = $pivotId;
                 } else {
