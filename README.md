@@ -63,7 +63,8 @@ public function getAuditLogIgnoredFields() : array
 }
 ```
 
-####Pivots
+### Working with Pivot Tables
+
 Audit log can also support changes on pivot models as well.
 
 In this example we have a `posts` and `tags` table with a `post_tags` pivot table containing a `post_id` and `tag_id`.
