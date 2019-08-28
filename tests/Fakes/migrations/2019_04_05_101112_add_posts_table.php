@@ -14,7 +14,7 @@ class AddPostsTable extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('post_id');
             $table->string('title');
             $table->timestamp('posted_at')->index();
             $table->timestamps();
