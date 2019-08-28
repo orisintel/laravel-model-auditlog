@@ -63,6 +63,84 @@ public function getAuditLogIgnoredFields() : array
 }
 ```
 
+####Pivots
+Audit log can also support changes on pivot models as well.
+
+In this example we have a `posts` and `tags` table with a `post_tags` pivot table containing a `post_id` and `tag_id`.
+
+Modify the audit log migration replacing the `subject_id` column to use the two pivot columns. 
+```php
+Schema::create('post_tag_auditlog', function (Blueprint $table) {
+    $table->bigIncrements('id');
+    $table->unsignedInteger('post_id')->index();
+    $table->unsignedInteger('tag_id')->index();
+    $table->unsignedTinyInteger('event_type')->index();
+    $table->unsignedInteger('user_id')->nullable()->index();
+    $table->string('field_name')->index();
+    $table->text('field_value_old')->nullable();
+    $table->text('field_value_new')->nullable();
+    $table->timestamp('occurred_at')->index()->default('CURRENT_TIMESTAMP');
+});
+```
+
+Create a model for the pivot table that extends Laravel's Pivot class. This class must use the AuditLoggablePivot trait and have a defined `$audit_loggable_keys` variable, which is used to map the pivot to the audit log table.
+ 
+```php
+class PostTag extends Pivot
+{
+    use AuditLoggablePivot;
+
+    /**
+     * The array keys are the composite key in the audit log
+     * table while the pivot table columns are the values.
+     *
+     * @var array
+     */
+    protected $audit_loggable_keys = [
+        'post_id' => 'post_id',
+        'tag_id'  => 'tag_id',
+    ];
+}
+```
+Side note: if a column shares the same name in the pivot and a column already in the audit log table (ex: `user_id`), change the name of the column in the audit log table (ex: `audit_user_id`) and define the relationship as `'audit_user_id' => 'user_id'`.
+
+The two models that are joined by the pivot will need to be updated so that events fire on the pivot model. Currently Laravel doesn't support pivot events so a third party package is required.
+```php
+composer require fico7489/laravel-pivot
+```
+
+Have both models use the PivotEventTrait
+```php
+use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    use PivotEventTrait;
+```
+
+Modify the belongsToMany join on both related models to include the using function along with the pivot model.
+In the Post model:
+```php
+public function tags()
+{
+    return $this->belongsToMany(Tag::class)
+        ->using(PostTag::class);
+}
+```
+In the Tag model:
+```php
+public function posts()
+{
+    return $this->belongsToMany(Post::class)
+        ->using(PostTag::class);
+}
+```
+
+When a pivot record is deleted through `detach` or `sync`, an audit log record for each of the keys (ex: `post_id` and `tag_id`) will added to the audit log table. The `field_value_old` will be the id of the record and the `field_value_new` will be null. The records will have an event type of `PIVOT_DELETED` (id: 6). 
+
+For a working example of this, see `laravel-model-auditlog/tests/Fakes`, which contains working migrations and models.
+
 ### Testing
 
 ``` bash

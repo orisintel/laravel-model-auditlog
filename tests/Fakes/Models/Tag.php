@@ -18,7 +18,6 @@ class Tag extends Model
     public function posts()
     {
         return $this->belongsToMany(Post::class)
-            ->whereNull('post_tag.deleted_at')
             ->using(PostTag::class);
     }
 }
