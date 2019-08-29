@@ -106,10 +106,13 @@ abstract class BaseModel extends Model
      */
     public function getPivotChanges($pivot, $model, array $pivotIds) : array
     {
+        $columns = (new $pivot())->getAuditLogForeignKeyColumns();
+        $key = in_array($model->getForeignKey(), $columns) ? $model->getForeignKey() : $model->getKeyName();
+
         $changes = [];
-        foreach ((new $pivot())->getAuditLogForeignKeyColumns() as $auditColumn => $pivotColumn) {
-            foreach ($pivotIds as $id => $pivotId) {
-                if ($pivotColumn !== $model->getForeignKey()) {
+        foreach ($pivotIds as $id => $pivotId) {
+            foreach ($columns as $auditColumn => $pivotColumn) {
+                if ($pivotColumn !== $key) {
                     $changes[$id][$auditColumn] = $pivotId;
                 } else {
                     $changes[$id][$auditColumn] = $model->getKey();

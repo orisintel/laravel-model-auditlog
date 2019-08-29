@@ -156,6 +156,9 @@ class PostTagAuditLog extends BaseModel
 
 For a working example of pivots with the audit log, see `laravel-model-auditlog/tests/Fakes`, which contains working migrations and models.
 
+Note:
+Both models must use the AuditLoggable trait (ex: Post and Tag) so that `$post->tags()->sync([...])` will work.
+
 ### Testing
 
 ``` bash
