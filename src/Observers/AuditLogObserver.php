@@ -52,9 +52,9 @@ class AuditLogObserver
     }
 
     /**
-     * @param $model
-     * @param $relationName
-     * @param $pivotIds
+     * @param Model  $model
+     * @param string $relationName
+     * @param array  $pivotIds
      */
     public function pivotDetached($model, string $relationName, array $pivotIds)
     {
@@ -66,7 +66,7 @@ class AuditLogObserver
      * Returns an instance of the AuditLogModel for the specific
      * model you provide.
      *
-     * @param $model
+     * @param Model $model
      *
      * @return mixed
      */
