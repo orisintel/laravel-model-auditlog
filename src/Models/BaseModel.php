@@ -53,9 +53,8 @@ abstract class BaseModel extends Model
 
     /**
      * @param Collection $passing_changes
-     * @param int $event_type
-     *
-     * @param Model $model
+     * @param int        $event_type
+     * @param Model      $model
      */
     public function saveChanges(Collection $passing_changes, int $event_type, $model) : void
     {
