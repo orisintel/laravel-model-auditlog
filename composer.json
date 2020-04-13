@@ -27,7 +27,7 @@
         "awobaz/compoships": "^1.1",
         "fico7489/laravel-pivot": "^3.0.1",
         "laravel/framework": "^7.0",
-        "orisintel/laravel-process-stamps": "^1.2|^2.0"
+        "orisintel/laravel-process-stamps": "^2.0"
     },
     "require-dev": {
         "doctrine/dbal": "^2.9",
