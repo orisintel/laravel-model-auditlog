@@ -178,7 +178,11 @@ abstract class BaseModel extends Model
                 return []; // if force deleted we want to stop execution here as there would be nothing to correlate records to
                 break;
             case EventType::DELETED:
-                return $model->only($model->getDeletedAtColumn());
+                if (method_exists($model, 'getDeletedAtColumn')) {
+                    return $model->only($model->getDeletedAtColumn());
+                }
+
+                return [];
                 break;
             case EventType::UPDATED:
             default:
