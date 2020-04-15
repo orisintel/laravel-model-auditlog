@@ -5,6 +5,7 @@ namespace OrisIntel\AuditLog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use OrisIntel\AuditLog\EventType;
 
 /**
@@ -69,7 +70,7 @@ abstract class BaseModel extends Model
                 }
 
                 if (config('model-auditlog.enable_user_foreign_keys')) {
-                    $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
+                    $log->user_id = Auth::{config('model-auditlog.auth_id_function', 'id')}();
                 }
 
                 $log->setAttribute('field_name', $key);
