@@ -161,7 +161,7 @@ abstract class BaseModel extends Model
 
     /**
      * @param int $event_type
-     * @param $model
+     * @param Model $model
      *
      * @return array
      */
@@ -177,8 +177,10 @@ abstract class BaseModel extends Model
             case EventType::FORCE_DELETED:
                 return []; // if force deleted we want to stop execution here as there would be nothing to correlate records to
                 break;
-            case EventType::UPDATED:
             case EventType::DELETED:
+                return $model->only($model->getDeletedAtColumn());
+                break;
+            case EventType::UPDATED:
             default:
                 return $model->getDirty();
                 break;
