@@ -74,7 +74,7 @@ abstract class BaseModel extends Model
                 }
 
                 $log->setAttribute('field_name', $key);
-                if($model->getRawOriginal($key) !== $change) {
+                if($event_type !== EventType::DELETED and $model->getRawOriginal($key) !== $change) {
                     $log->setAttribute('field_value_old', $model->getRawOriginal($key));
                 }
                 $log->setAttribute('field_value_new', $change);
