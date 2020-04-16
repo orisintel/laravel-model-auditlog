@@ -5,6 +5,7 @@ namespace OrisIntel\AuditLog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use OrisIntel\AuditLog\EventType;
 
 /**
@@ -69,11 +70,13 @@ abstract class BaseModel extends Model
                 }
 
                 if (config('model-auditlog.enable_user_foreign_keys')) {
-                    $log->user_id = \Auth::{config('model-auditlog.auth_id_function', 'id')}();
+                    $log->user_id = Auth::{config('model-auditlog.auth_id_function', 'id')}();
                 }
 
                 $log->setAttribute('field_name', $key);
-                $log->setAttribute('field_value_old', $model->getOriginal($key));
+                if($event_type !== EventType::DELETED and $model->getRawOriginal($key) !== $change) {
+                    $log->setAttribute('field_value_old', $model->getRawOriginal($key));
+                }
                 $log->setAttribute('field_value_new', $change);
 
                 $log->attributes;
@@ -160,7 +163,7 @@ abstract class BaseModel extends Model
 
     /**
      * @param int $event_type
-     * @param $model
+     * @param Model $model
      *
      * @return array
      */
@@ -176,6 +179,14 @@ abstract class BaseModel extends Model
             case EventType::FORCE_DELETED:
                 return []; // if force deleted we want to stop execution here as there would be nothing to correlate records to
                 break;
+            case EventType::DELETED:
+                if (method_exists($model, 'getDeletedAtColumn')) {
+                    return $model->only($model->getDeletedAtColumn());
+                }
+
+                return [];
+                break;
+            case EventType::UPDATED:
             default:
                 return $model->getDirty();
                 break;

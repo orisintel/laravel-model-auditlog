@@ -89,6 +89,7 @@ class PostModelTest extends TestCase
         $this->assertEquals(3, $post->auditLogs()->count());
 
         $last = $post->auditLogs()->where('event_type', EventType::DELETED)->first();
+
         $this->assertEquals('deleted_at', $last->field_name);
         $this->assertNull($last->field_value_old);
         $this->assertNotEmpty($last->field_value_new);
