@@ -74,7 +74,7 @@ abstract class BaseModel extends Model
                 }
 
                 $log->setAttribute('field_name', $key);
-                $log->setAttribute('field_value_old', $model->getRawOriginal($key));
+                $log->setAttribute('field_value_old', $model->getOriginal($key));
                 $log->setAttribute('field_value_new', $change);
 
                 $log->attributes;
