@@ -10,7 +10,7 @@ class AuditLogObserver
     /**
      * @param Model $model
      */
-    public function created($model) : void
+    public function created($model): void
     {
         $this->getAuditLogModel($model)
             ->recordChanges(EventType::CREATED, $model);
@@ -19,7 +19,7 @@ class AuditLogObserver
     /**
      * @param Model $model
      */
-    public function updated($model) : void
+    public function updated($model): void
     {
         $this->getAuditLogModel($model)
             ->recordChanges(EventType::UPDATED, $model);
@@ -28,7 +28,7 @@ class AuditLogObserver
     /**
      * @param Model $model
      */
-    public function deleted($model) : void
+    public function deleted($model): void
     {
         /*
          * If a model is hard deleting, either via a force delete or that model does not implement
@@ -45,7 +45,7 @@ class AuditLogObserver
     /**
      * @param Model $model
      */
-    public function restored($model) : void
+    public function restored($model): void
     {
         $this->getAuditLogModel($model)
             ->recordChanges(EventType::RESTORED, $model);

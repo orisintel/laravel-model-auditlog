@@ -13,7 +13,7 @@ class IgnoredFieldsPost extends Model
 
     protected $table = 'posts';
 
-    public function getAuditLogIgnoredFields() : array
+    public function getAuditLogIgnoredFields(): array
     {
         return ['posted_at'];
     }

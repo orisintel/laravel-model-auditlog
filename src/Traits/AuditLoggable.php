@@ -10,7 +10,7 @@ trait AuditLoggable
     /**
      * Boots the trait and sets the observer.
      */
-    public static function bootAuditLoggable() : void
+    public static function bootAuditLoggable(): void
     {
         static::observe(AuditLogObserver::class);
     }
@@ -18,7 +18,7 @@ trait AuditLoggable
     /**
      * @return string
      */
-    public function getAuditLogModelName() : string
+    public function getAuditLogModelName(): string
     {
         return get_class($this) . config('model-auditlog.model_suffix');
     }
@@ -38,7 +38,7 @@ trait AuditLoggable
     /**
      * @return string
      */
-    public function getAuditLogTableName() : string
+    public function getAuditLogTableName(): string
     {
         return $this->getTable() . config('model-auditlog.table_suffix');
     }
@@ -48,7 +48,7 @@ trait AuditLoggable
      *
      * @return array
      */
-    public function getAuditLogIgnoredFields() : array
+    public function getAuditLogIgnoredFields(): array
     {
         return [];
     }
@@ -58,7 +58,7 @@ trait AuditLoggable
      *
      * @return array
      */
-    public function getAuditLogForeignKeyColumns() : array
+    public function getAuditLogForeignKeyColumns(): array
     {
         return ['subject_id' => $this->getKeyName()];
     }
@@ -68,7 +68,7 @@ trait AuditLoggable
      *
      * @return array
      */
-    public function getAuditLogForeignKeyColumnKeys() : array
+    public function getAuditLogForeignKeyColumnKeys(): array
     {
         return array_keys($this->getAuditLogForeignKeyColumns());
     }
@@ -78,7 +78,7 @@ trait AuditLoggable
      *
      * @return array
      */
-    public function getAuditLogForeignKeyColumnValues() : array
+    public function getAuditLogForeignKeyColumnValues(): array
     {
         return array_values($this->getAuditLogForeignKeyColumns());
     }
@@ -88,7 +88,7 @@ trait AuditLoggable
      *
      * @return HasMany|null
      */
-    public function auditLogs() : ?HasMany
+    public function auditLogs(): ?HasMany
     {
         return $this->hasMany($this->getAuditLogModelName(), 'subject_id');
     }
