@@ -24,7 +24,7 @@
     ],
     "require": {
         "php": "^7.3",
-        "awobaz/compoships": "^1.1",
+        "awobaz/compoships": "^2.0.3",
         "fico7489/laravel-pivot": "^3.0.1",
         "laravel/framework": "^8.0",
         "orisintel/laravel-process-stamps": "^3.0"
