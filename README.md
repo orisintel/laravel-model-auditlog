@@ -165,6 +165,25 @@ Both models must use the AuditLoggable trait (ex: Post and Tag) so that `$post->
 composer test
 ```
 
+### Using Docker
+All assets are set up under the docker-compose.yml file. The first time you run the docker image you must build it with
+the following command:
+```bash
+docker-compose build
+```
+
+Then you can bring it up in the background using:
+```bash
+docker-compose up -d
+```
+
+And the image is aliased so you can access its command line via:
+```bash
+docker exec -it processes-stamp-app /bin/bash
+```
+
+From there you can run the tests within an isolated environment
+
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
